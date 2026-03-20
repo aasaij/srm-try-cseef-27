@@ -1,4 +1,4 @@
-//Program to implement the queue
+//Program to implement the circular queue
 #include <stdio.h>
 #include <stdlib.h>
 //#include <stdbool.h>
@@ -25,7 +25,8 @@ queue* createQueue(int qsize){
 	return temp;
 }
 bool isFull(queue* q){
-	return q->rear+1 == q->capacity;	
+	return q->rear+1 == q->capacity && q->front == 0 ||
+		q->rear+1 == q->front;	
 }
 
 bool isEmpty(queue *q){
@@ -35,7 +36,9 @@ void enqueue(queue* q, employee e){
 	if (q->front == -1) q->front = 0;
 //		q->rear++;
 //		q->emps[q->rear] = e;
-		q->emps[++q->rear] = e;
+//		q->emps[++q->rear] = e;
+	q->rear = (q->rear + 1) % q->capacity;
+	q->emps[q->rear] = e;
 }
 bool dequeue(queue *q){
 	if (!isEmpty(q)){
@@ -45,7 +48,7 @@ bool dequeue(queue *q){
 			q->rear = -1;
 		}
 		else
-			q->front++;
+			q->front = (q->front + 1) % q->capacity;
 		return true;
 	}
 	return false;
